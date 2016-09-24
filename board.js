@@ -87,6 +87,9 @@ var Board = function() {
     $("#main").append(options);
     
     that.update_board = function() {
+        if (that.check_clear()) {
+            that.clear_board();
+        }
         if (!select) {
             var new_grid = Object.create(Array.prototype);
             for (var i = 0; i < rows; i++) {
@@ -157,6 +160,17 @@ var Board = function() {
         $(".cell_select").addClass("cell_sleeping").removeClass("cell_select");
     }
     
+    that.check_clear = function() {
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < cols; j++) {
+                if (grid[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     Object.freeze(that);
     return that;
 };
@@ -182,4 +196,4 @@ var Options = function(board) {
 var game_board = Board();
 Options(game_board);
 //game_board.clear_board();
-setInterval(game_board.update_board, 1000);
+setInterval(game_board.update_board, 800);
