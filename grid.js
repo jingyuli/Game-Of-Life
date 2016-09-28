@@ -1,3 +1,17 @@
+/** 
+* Built in mod function can return negative numbers
+* This guarantees positive values
+* @param m dividend
+* @param n divisor
+*/
+var my_mod = function(m, n) {
+    return ((m % n) + n) % n;
+}
+
+/** 
+* Models the game grid
+* Keeps track of what state squares are in
+*/
 var Grid = function() {
     var that = Object.create(Grid.prototype);
     
@@ -9,22 +23,47 @@ var Grid = function() {
         }
     }
     
+    /**
+    * Returns state of square
+    * @param row in grid
+    * @param column in grid
+    * @return true if the square is awake, false if in hibernation
+    */
     that.get_value = function(i, j) {
         return grid[i][j];
     }
     
+    /**
+    * Called when square is clicked on (or the equivalent)
+    * Wakes a square that is in hibernation; hibernates a square that is awake
+    * @param row in grid
+    * @param column in grid
+    */
     that.square_click = function(i, j) {
         grid[i][j] = !grid[i][j];
     }
     
+    /**
+    * Wakes a square
+    * @param row in grid
+    * @param column in grid
+    */
     that.square_wake = function(i, j) {
         grid[i][j] = true;
     }
     
+    /**
+    * Hibernates a square
+    * @param row in grid
+    * @param column in grid
+    */
     that.square_hibernate = function(i, j) {
         grid[i][j] = false;
     }
     
+    /**
+    * Hibernates every square
+    */
     that.clear_board = function() {
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
@@ -33,6 +72,10 @@ var Grid = function() {
         }
     }
     
+    /**
+    * Checks if all squares are in hibernation, used to automatically stop the simulation if no cells are awake
+    * @return true if all squares are in hibernation, false otherwise
+    */
     that.check_clear = function() {
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
@@ -44,6 +87,9 @@ var Grid = function() {
         return true;
     }
     
+    /**
+    * Updates grid (next generation)
+    */
     that.update_board = function(select) {
         if (that.check_clear()) {
             that.clear_board();

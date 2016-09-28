@@ -2,70 +2,222 @@
   mocha.setup("bdd");
   var assert = chai.assert;
 
-  describe("TrieNode", function() {
-    describe("addword", function() {
+  describe("Grid", function() {
+    describe("square_click", function() {
         
-        /*************** Testing addWord() using TrieNode ***************/
-        // Instantiate TrieNode
-        var empty_trie = TrieNode();
-        var r_subtrie;
-        var a_subtrie;
-        var b1_subtrie;
-        var b2_subtrie;
-        var i_subtrie;
-        var t_subtrie;
-        empty_trie.addWord("rabbit");
-        // Checks if Trie correctly adds a single word
-        // Checks to make sure nodes that shouldn't have been added are not in the Trie
-        it("Root node not word", function() {
-            // Check root TrieNode is not a word
-            assert.equal(false, empty_trie.check_if_word());
+        // Instantiate Grid
+        var test_board = Grid();
+        
+        it("Cells initially in hibernation", function() {
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    assert.equal(false, test_board.get_value(i, j));
+                }
+            }
         });
-        it("Checking \'r\' subtrie exists and node is not a word, also checks invalid child character does not exist", function() {
-            // Gets 'r' subtrie and tests that it is of the prototype TrieNode, and that it is not a word
-            r_subtrie = empty_trie.get_child("r");
-            assert.equal(false, r_subtrie === 0);
-            assert.equal(false, r_subtrie.check_if_word());
-            
-            // Checks that invalid child does not exist
-            assert.equal(empty_trie.get_child("x"), 0);
+        
+        it("Clicking on a hibernating square", function() {
+            test_board.square_click(5, 3);
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    if (i == 5 && j == 3) {
+                        assert.equal(true, test_board.get_value(i, j));
+                    } else {
+                        assert.equal(false, test_board.get_value(i, j));
+                    }
+                }
+            }
         });
-        it("Checking \'a\' subtrie exists and node is not a word", function() {
-            // Gets 'a' subtrie and tests that it is of the prototype TrieNode, and that it is not a word
-            a_subtrie = r_subtrie.get_child("a");
-            assert.equal(false, a_subtrie === 0);
-            assert.equal(false, a_subtrie.check_if_word());
-        });
-        it("Checking \'b\' subtrie exists and node is not a word", function() {
-            // Gets 'b' subtrie and tests that it is of the prototype TrieNode, and that it is not a word
-            b1_subtrie = a_subtrie.get_child("b");
-            assert.equal(false, b1_subtrie === 0);
-            assert.equal(false, b1_subtrie.check_if_word());
-        });
-        it("Checking second \'b\' subtrie exists and node is not a word", function() {
-            // Gets 'b' subtrie and tests that it is of the prototype TrieNode, and that it is not a word
-            b2_subtrie = b1_subtrie.get_child("b");
-            assert.equal(false, b2_subtrie === 0);
-            assert.equal(false, b2_subtrie.check_if_word());
-        });
-        it("Checking \'i\' subtrie exists and node is not a word", function() {
-            // Gets 'i' subtrie and tests that it is of the prototype TrieNode, and that it is not a word
-            i_subtrie = b2_subtrie.get_child("i");
-            assert.equal(false, i_subtrie === 0);
-            assert.equal(false, i_subtrie.check_if_word());
-        });
-        it("Checking \'t\' subtrie exists and node is not a word, also checks invalid child character does not exist", function() {
-            // Gets 't' subtrie and tests that it is a word
-            t_subtrie = i_subtrie.get_child("t");
-            assert.equal(false, t_subtrie === 0);
-            assert.equal(true, t_subtrie.check_if_word());
-            
-            // Checks that invalid child does not exist
-            assert.equal(empty_trie.get_child("t"), 0);
+        
+        it("Clicking on a awake square", function() {
+            test_board.square_click(5, 3);
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    assert.equal(false, test_board.get_value(i, j));
+                }
+            }
         });
     });
+      
+    describe("square_wake", function() {
+        
+        // Instantiate Grid
+        var test_board = Grid();
+        
+        it("Waking up hibernating square", function() {
+            test_board.square_wake(0, 0);
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    if (i == 0 && j == 0) {
+                        assert.equal(true, test_board.get_value(i, j));
+                    } else {
+                        assert.equal(false, test_board.get_value(i, j));
+                    }
+                }
+            }
+        });
+        
+        it("Waking up already awake square", function() {
+            test_board.square_wake(0, 0);
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    if (i == 0 && j == 0) {
+                        assert.equal(true, test_board.get_value(i, j));
+                    } else {
+                        assert.equal(false, test_board.get_value(i, j));
+                    }
+                }
+            }
+        });
+    });
+        
+    describe("square_hibernate", function() {
+        
+        // Instantiate Grid
+        var test_board = Grid();
+        
+        it("Hibernating awake square", function() {
+            test_board.square_wake(0, 0);
+            test_board.square_hibernate(0, 0);
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    assert.equal(false, test_board.get_value(i, j));
+                }
+            }
+        });
+        
+        it("Hibernating already hibernating square", function() {
+            test_board.square_wake(1, 0);
+            test_board.square_hibernate(0, 0);
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    if (i == 1 && j == 0) {
+                        assert.equal(true, test_board.get_value(i, j));
+                    } else {
+                        assert.equal(false, test_board.get_value(i, j));
+                    }
+                }
+            }
+        });
+    });
+      
+    describe("clear_board", function() {
+        
+        // Instantiate Grid
+        var test_board = Grid();
+        
+        it("Waking up hibernating square", function() {
+            test_board.square_wake(0, 0);
+            test_board.square_wake(0, 1);
+            test_board.square_wake(3, 5);
+            test_board.square_wake(3, 10);
+            test_board.square_wake(15, 15);
+            test_board.clear_board();
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    assert.equal(false, test_board.get_value(i, j));
+                }
+            }
+        });
+    });
+      
+    describe("check_clear", function() {
+        
+        // Instantiate Grid
+        var test_board = Grid();
+        
+        it("Checking board with all hibernating squares", function() {
+            assert.equal(true, test_board.check_clear());
+        });
+        
+        it("Checking board with awake squares", function() {
+            test_board.square_wake(0, 0);
+            test_board.square_wake(0, 1);
+            assert.equal(false, test_board.check_clear());
+        });
+    });
+      
+    describe("update_board", function() {
+        
+        it("Checking block configuration", function() {
+            // Instantiate Grid
+            var test_board = Grid();
+            test_board.square_wake(1, 1);
+            test_board.square_wake(1, 2);
+            test_board.square_wake(2, 1);
+            test_board.square_wake(2, 2);
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(1, 1));
+            assert.equal(true, test_board.get_value(1, 2));
+            assert.equal(true, test_board.get_value(2, 1));
+            assert.equal(true, test_board.get_value(2, 2));
+        });
+        
+        it("Checking glider configuration", function() {
+            // Instantiate Grid
+            var test_board = Grid();
+            test_board.square_wake(3, 5);
+            test_board.square_wake(4, 6);
+            test_board.square_wake(5, 6);
+            test_board.square_wake(5, 5);
+            test_board.square_wake(5, 4);
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(4, 4));
+            assert.equal(true, test_board.get_value(4, 6));
+            assert.equal(true, test_board.get_value(5, 6));
+            assert.equal(true, test_board.get_value(5, 5));
+            assert.equal(true, test_board.get_value(6, 5));
+        });
+        
+        it("Checking 1x3 configuration", function() {
+            // Instantiate Grid
+            var test_board = Grid();
+            test_board.square_wake(7, 6);
+            test_board.square_wake(7, 7);
+            test_board.square_wake(7, 8);
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(6, 7));
+            assert.equal(true, test_board.get_value(7, 7));
+            assert.equal(true, test_board.get_value(8, 7));
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(7, 6));
+            assert.equal(true, test_board.get_value(7, 7));
+            assert.equal(true, test_board.get_value(7, 8));
+        });
+        
+        it("Checking 1x3 configuration, wrap around", function() {
+            // Instantiate Grid
+            var test_board = Grid();
+            test_board.square_wake(0, 0);
+            test_board.square_wake(0, 1);
+            test_board.square_wake(0, 2);
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(15, 1));
+            assert.equal(true, test_board.get_value(0, 1));
+            assert.equal(true, test_board.get_value(1, 1));
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(0, 0));
+            assert.equal(true, test_board.get_value(0, 1));
+            assert.equal(true, test_board.get_value(0, 2));
+        });
+        
+        it("Checking another wrap around configuration", function() {
+            // Instantiate Grid
+            var test_board = Grid();
+            test_board.square_wake(0, 0);
+            test_board.square_wake(0, 1);
+            test_board.square_wake(0, 15);
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(15, 0));
+            assert.equal(true, test_board.get_value(0, 0));
+            assert.equal(true, test_board.get_value(1, 0));
+            test_board.update_board();
+            assert.equal(true, test_board.get_value(0, 0));
+            assert.equal(true, test_board.get_value(0, 1));
+            assert.equal(true, test_board.get_value(0, 15));
+        });
+    })
   });
-
 
   mocha.run();
 })()

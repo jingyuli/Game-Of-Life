@@ -1,3 +1,7 @@
+/**
+* View
+* Displays divs representing the grid
+*/
 var Interface = function() {
     that = Object.create(Interface.prototype);
     var square_height = 4.0;
@@ -31,7 +35,14 @@ var Interface = function() {
     $("#main").append(board_div);
     $("#main").append(options);
     
-    // Assumes square_click in the grid was called first (i.e. values updated)
+    /**
+    * Represents square click or equivalent
+    * Assumes square_click in the grid was called first (i.e. values updated)
+    * @param row in grid
+    * @param column in grid
+    * @param Grid object
+    * @param true if in select mode, false otherwise
+    */
     that.square_click = function(i, j, grid, select) {
         if (grid.get_value(i, j)) {
             that.square_wake(i, j, select);
@@ -40,6 +51,12 @@ var Interface = function() {
         }
     }
     
+    /**
+    * Wakes up a square
+    * @param row in grid
+    * @param column in grid
+    * @param true if in select mode, false otherwise
+    */
     that.square_wake = function(i, j, select) {
         if (select) {
             $("#" + String(i) + "-" + String(j)).addClass("cell_awake").removeClass("cell_select");
@@ -48,6 +65,12 @@ var Interface = function() {
         }
     }
     
+    /**
+    * Hibernates a square
+    * @param row in grid
+    * @param column in grid
+    * @param true if in select mode, false otherwise
+    */
     that.square_hibernate = function(i, j, select) {
         if (select) {
             $("#" + String(i) + "-" + String(j)).addClass("cell_select").removeClass("cell_awake");
@@ -56,19 +79,33 @@ var Interface = function() {
         }
     }
     
+    /**
+    * Hibernates every square
+    */
     that.clear_board = function() {
         that.enter_select_mode();
     }
     
+    /**
+    * Changes class of squares to correspond to select mode
+    */
     that.enter_select_mode = function() {
         $(".cell_awake").addClass("cell_select").removeClass("cell_awake");
         $(".cell_sleeping").addClass("cell_select").removeClass("cell_sleeping");
     }
     
+    /**
+    * Changes class of squares to correspond to simulation mode
+    */
     that.leave_select_mode = function() {
         $(".cell_select").addClass("cell_sleeping").removeClass("cell_select");
     }
-        
+    
+    /**
+    * Updates board divs
+    * @param Grid object
+    * @param true if in select mode, false otherwise
+    */
     that.update_board = function(grid, select) {
         if (grid.check_clear()) {
             that.clear_board();

@@ -1,3 +1,7 @@
+/**
+* Options for the game: start, clear, preset patterns
+* @param Board object
+*/
 var Options = function(board) {
     var start_button = document.createElement('div');
     start_button.id = "start_button";
@@ -37,12 +41,21 @@ var Options = function(board) {
     
 }
 
+/**
+* Run preset pattern
+* @param Board object
+* @param pattern function
+*/
 var run_preset = function(board, pattern) {
     board.clear_board();
     pattern(board);
     board.leave_select_mode();
 }
 
+/**
+* Preset pattern: face
+* @param Board object
+*/
 var preset_pattern_1 = function(board) {
     board.square_wake(3, 4);
     board.square_wake(4, 4);
@@ -60,6 +73,10 @@ var preset_pattern_1 = function(board) {
     board.square_wake(11, 8);
 }
 
+/**
+* Preset pattern: diagonals
+* @param Board object
+*/
 var preset_pattern_2 = function(board) {
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
@@ -70,6 +87,10 @@ var preset_pattern_2 = function(board) {
     }
 }
 
+/**
+* Preset pattern: square border
+* @param Board object
+*/
 var preset_pattern_3 = function(board) {
     for (var i = 3; i < rows - 3; i++) {
         board.square_wake(i, 3);
