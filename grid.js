@@ -91,9 +91,6 @@ var Grid = function() {
     * Updates grid (next generation)
     */
     that.update_board = function(select) {
-        if (that.check_clear()) {
-            that.clear_board();
-        }
         if (!select) {
             var new_grid = Object.create(Array.prototype);
             for (var i = 0; i < rows; i++) {

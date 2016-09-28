@@ -95,6 +95,10 @@ var Board = function() {
     * Updates board (next generation)
     */
     that.update_board = function() {
+        // Reset board if all squares are in hibernation
+        if (internal.check_clear()) {
+            that.clear_board();
+        }
         internal.update_board(select);
         interface.update_board(internal, select);
     }

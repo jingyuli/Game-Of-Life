@@ -107,9 +107,6 @@ var Interface = function() {
     * @param true if in select mode, false otherwise
     */
     that.update_board = function(grid, select) {
-        if (grid.check_clear()) {
-            that.clear_board();
-        }
         if (!select) {
             for (var i = 0; i < rows; i++) {
                 for (var j = 0; j < cols; j++) {
