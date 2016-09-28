@@ -80,7 +80,7 @@ var Interface = function() {
     }
     
     /**
-    * Hibernates every square
+    * Resets each square to select mode
     */
     that.clear_board = function() {
         $(".cell_awake").addClass("cell_select").removeClass("cell_awake");
