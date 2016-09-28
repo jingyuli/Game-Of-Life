@@ -3,14 +3,16 @@
 * @param m the dividend
 * @param n the divisor
 */
+
+const rows = 16;
+const cols = 16;
+
 var my_mod = function(m, n) {
     return ((m % n) + n) % n;
 }
 
 var Board = function() {
     var that = Object.create(Board.prototype);
-    var rows = 16;
-    var cols = 16;
     var square_height = 4.0;
     var dist_between = 0.2;
     var col_height = square_height * rows + 2 * dist_between * rows;
@@ -38,7 +40,6 @@ var Board = function() {
     
     that.square_wake = function(i, j) {
         grid[i][j] = true;
-//        $("#" + String(i) + "-" + String(j)).css({backgroundColor: '#443985'});
         if (select) {
             $("#" + String(i) + "-" + String(j)).addClass("cell_awake").removeClass("cell_select");
         } else {
@@ -48,7 +49,6 @@ var Board = function() {
     
     that.square_hibernate = function(i, j) {
         grid[i][j] = false;
-//        $("#" + String(i) + "-" + String(j)).css({backgroundColor: '#bebae3'});
         if (select) {
             $("#" + String(i) + "-" + String(j)).addClass("cell_select").removeClass("cell_awake");
         } else {
@@ -136,10 +136,6 @@ var Board = function() {
         }
     }
     
-    that.start_simu = function() {
-        that.leave_select_mode();
-    }
-    
     that.clear_board = function() {
         that.enter_select_mode();
         for (var i = 0; i < rows; i++) {
@@ -174,26 +170,3 @@ var Board = function() {
     Object.freeze(that);
     return that;
 };
-
-var Options = function(board) {
-    var start_button = document.createElement('div');
-    start_button.id = "start_button";
-    start_button.className = "my_button";
-    start_button.innerHTML = "Start";
-    start_button.onclick = board.start_simu;
-    
-    var clear_button = document.createElement('div');
-    clear_button.id = "clear_button";
-    clear_button.className = "my_button";
-    clear_button.innerHTML = "Clear";
-    clear_button.onclick = board.clear_board;
-    
-    $('#options').append(start_button);
-    $('#options').append(clear_button);
-    
-}
-
-var game_board = Board();
-Options(game_board);
-//game_board.clear_board();
-setInterval(game_board.update_board, 800);
