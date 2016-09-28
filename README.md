@@ -1,6 +1,6 @@
 Concerns
 ===================
-The project calls for an abstract data type that represents the grid containing information on which squares are active. Based on this object, divs should be created to accurately visualize the board. Then there should be buttons so that the user can control the game. Each of these were separated into modules.
+The project calls for an abstract data type that represents the grid, containing information on which squares are active. Based on this object, divs should be created and updated to accurately visualize the board. Then there should be ways in which the user can control the game (listeners, buttons). Each of these were separated into modules.
 
 Modules
 ===================
@@ -12,4 +12,4 @@ I used filter to get a list of awake neighbors. I also used a function to create
 
 Design decisions
 ==================
-One problem I ran into was adding the on click event handler for each square. It was difficult separating this into the model or view, because both need to be updated when the user clicks square. So instead, this was handled in the Board class, which serves as a controller, but in this case manipulated both the model and view. All other functionality was modularized into either the model or view. 
+One problem I ran into was adding the on click event handler for each square. It was difficult separating this into the model or view, because both need to be updated when the user clicks square. So instead, this was handled in the Board class. All other functionality was modularized into either the model or view. 
