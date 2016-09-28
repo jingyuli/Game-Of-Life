@@ -9,6 +9,12 @@ var Options = function(board) {
     start_button.innerHTML = "Start";
     start_button.onclick = board.leave_select_mode;
     
+    var stop_button = document.createElement('div');
+    stop_button.id = "stop_button";
+    stop_button.className = "my_button";
+    stop_button.innerHTML = "Stop";
+    stop_button.onclick = board.enter_select_mode;
+    
     var clear_button = document.createElement('div');
     clear_button.id = "clear_button";
     clear_button.className = "my_button";
@@ -34,6 +40,7 @@ var Options = function(board) {
     preset_3.onclick = function() {run_preset(board, preset_pattern_3)};
     
     $('#options').append(start_button);
+    $('#options').append(stop_button);
     $('#options').append(clear_button);
     $('#options').append(preset_1);
     $('#options').append(preset_2);

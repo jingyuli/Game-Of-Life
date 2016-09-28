@@ -83,14 +83,14 @@ var Interface = function() {
     * Hibernates every square
     */
     that.clear_board = function() {
-        that.enter_select_mode();
+        $(".cell_awake").addClass("cell_select").removeClass("cell_awake");
+        $(".cell_sleeping").addClass("cell_select").removeClass("cell_sleeping");
     }
     
     /**
     * Changes class of squares to correspond to select mode
     */
     that.enter_select_mode = function() {
-        $(".cell_awake").addClass("cell_select").removeClass("cell_awake");
         $(".cell_sleeping").addClass("cell_select").removeClass("cell_sleeping");
     }
     
