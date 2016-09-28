@@ -80,5 +80,6 @@ var preset_pattern_3 = function(board) {
 }
 
 var game_board = Board();
+game_board.init();
 Options(game_board);
 setInterval(game_board.update_board, 800);

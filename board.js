@@ -13,160 +13,52 @@ var my_mod = function(m, n) {
 
 var Board = function() {
     var that = Object.create(Board.prototype);
-    var square_height = 4.0;
-    var dist_between = 0.2;
-    var col_height = square_height * rows + 2 * dist_between * rows;
-    var option_width = 15;
-    var main_width = col_height + option_width;
+    var internal = Grid();
+    var interface = Interface();
     // Allow user to select alive squares
     var select = true;
-    
-    var grid = Object.create(Array.prototype);
-    for (var i = 0; i < rows; i++) {
-        grid.push(Object.create(Array.prototype));
-    }
-    
-    var board_div = document.createElement('div');
-    board_div.id = "board";
-    board_div.setAttribute("style", "height: " + col_height + "vh; width: " + col_height + "vh");
-    
-    that.square_click = function(i, j) {
-        if (grid[i][j]) {
-            that.square_hibernate(i, j);
-        } else {
-            that.square_wake(i, j);
-        }
-    }
-    
-    that.square_wake = function(i, j) {
-        grid[i][j] = true;
-        if (select) {
-            $("#" + String(i) + "-" + String(j)).addClass("cell_awake").removeClass("cell_select");
-        } else {
-            $("#" + String(i) + "-" + String(j)).addClass("cell_awake").removeClass("cell_sleeping");
-        }
-    }
-    
-    that.square_hibernate = function(i, j) {
-        grid[i][j] = false;
-        if (select) {
-            $("#" + String(i) + "-" + String(j)).addClass("cell_select").removeClass("cell_awake");
-        } else {
-            $("#" + String(i) + "-" + String(j)).addClass("cell_sleeping").removeClass("cell_awake");
-        }
-    }
-    
-    for (var i = 0; i < rows; i++) {
-        var row_div = document.createElement('div');
-        row_div.setAttribute("style", "display: flex");
-        for (var j = 0; j < cols; j++) {
-            grid[i][j] = false;
-            var cell_div = document.createElement('div');
-            cell_div.id = String(i) + "-" + String(j);
-            cell_div.className = "cell_select";
-            cell_div.setAttribute("style", "height: " + square_height + "vh; width: " + square_height + "vh; margin: " + dist_between + "vh");
-            // creates closure so we can pass by value i, j
-            (function (i, j) {
-                cell_div.onclick = function() {
-                    if (select) {
-                        that.square_click(i, j);
-                    }
-                }
-            })(i, j);
-            row_div.appendChild(cell_div);
-        }
-        board_div.appendChild(row_div);
-    }
-    
-    var options = document.createElement('div');
-    options.id = "options";
-    options.setAttribute("style", "width: " + option_width + "vh; height: " + col_height + "vh");
-    
-    $("#main").css({width: main_width + "vh"});
-    $("#main").append(board_div);
-    $("#main").append(options);
-    
-    that.update_board = function() {
-        if (that.check_clear()) {
-            that.clear_board();
-        }
-        if (!select) {
-            var new_grid = Object.create(Array.prototype);
-            for (var i = 0; i < rows; i++) {
-                new_grid.push(Object.create(Array.prototype));
-            }
-            for (var i = 0; i < rows; i++) {
-                for (var j = 0; j < cols; j++) {
-                    var neighbors = [];
-                    var directions = [-1, 0, 1];
-                    for (var y = 0; y < 3; y++) {
-                        for (var x = 0; x < 3; x++) {
-                            // not the current location
-                            if (x != 1 || y != 1) {
-                                neighbors.push([i + directions[y], j + directions[x]]);
-                            }
-                        }
-                    }
-                    var states = neighbors.map(function(coords) {
-                        return grid[my_mod(coords[0], rows)][my_mod(coords[1], cols)];
-                    });
-                    var alive = states.filter(function(color) { return color; });
-                    var num_alive = alive.length;
-                    if (grid[i][j]) {
-                        if (num_alive > 1 && num_alive < 4) {
-                            new_grid[i][j] = true;
-                        } else {
-                            new_grid[i][j] = false;
-                        }
-                    } else {
-                        if (num_alive == 3) {
-                            new_grid[i][j] = true;
-                        } else {
-                            new_grid[i][j] = false;
-                        }
-                    }
-                    if (new_grid[i][j]) {
-                        $("#" + String(i) + "-" + String(j)).addClass("cell_awake").removeClass("cell_sleeping");
-                    } else {
-                        $("#" + String(i) + "-" + String(j)).addClass("cell_sleeping").removeClass("cell_awake");
-                    }
-                }
-            }
-            grid = new_grid;
-        }
-    }
-    
-    that.clear_board = function() {
-        that.enter_select_mode();
+    that.init = function() {
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
-                grid[i][j] = false;
+                var cell_id = "#" + String(i) + "-" + String(j);
+                // creates closure so we can pass by value i, j
+                (function (i, j) {
+                    $(cell_id).click(function() {
+                        that.square_click(i, j);
+                    });
+                })(i, j);
             }
         }
     }
-    
+    that.square_click = function(i, j) {
+        internal.square_click(i, j);
+        interface.square_click(i, j, internal, select);
+    }
+    that.square_wake = function(i, j) {
+        internal.square_wake(i, j);
+        interface.square_wake(i, j, select);
+    }
+    that.square_hibernate = function(i, j) {
+        internal.square_hibernate(i, j);
+        interface.square_hibernate(i, j, select);
+    }
     that.enter_select_mode = function() {
         select = true;
-        $(".cell_awake").addClass("cell_select").removeClass("cell_awake");
-        $(".cell_sleeping").addClass("cell_select").removeClass("cell_sleeping");
+        interface.enter_select_mode();
     }
-    
     that.leave_select_mode = function() {
         select = false;
-        $(".cell_select").addClass("cell_sleeping").removeClass("cell_select");
+        interface.leave_select_mode();
     }
-    
-    that.check_clear = function() {
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < cols; j++) {
-                if (grid[i][j]) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    that.clear_board = function() {
+        that.enter_select_mode();
+        internal.clear_board();
+        interface.clear_board();
     }
-    
+    that.update_board = function() {
+        internal.update_board(select);
+        interface.update_board(internal, select);
+    }
     Object.freeze(that);
     return that;
-};
+}
