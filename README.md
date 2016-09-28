@@ -4,7 +4,7 @@ The project calls for an abstract data type that represents the grid, containing
 
 Modules
 ===================
-I created an overall Board class, which contains a Grid object and an Interface object. This ties together the frontend and backend: Grid is a model of the board and Interface is the view. Board serves as the controller. I also had an Options class, which created the the preset patterns and buttons. The Board was also instantiated and initialized there. 
+I created an overall Board class, which contains a Grid object and an Interface object. This ties together the frontend and backend: Grid is a model of the board and Interface is the view. Board serves as the controller. I also had an Options class, which created the the preset patterns and buttons. The Board was also instantiated and initialized there. Some of the Interface functions depend on the Grid object. This is fine, because the view is meant to depend on the model.
 
 Use of functionals
 ==================
